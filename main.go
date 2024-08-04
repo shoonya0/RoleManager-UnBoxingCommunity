@@ -1,6 +1,7 @@
 package main
 
 import (
+	db "RoleManager/DB"
 	"RoleManager/config"
 	"log"
 
@@ -52,13 +53,14 @@ func init() {
 func main() {
 	r := gin.Default()
 
+	// Middleware for connecting to the database
+	r.Use(db.DBMiddleware())
+
 	port = env.PORT
 	if port == "" {
 		port = "3230"
 	}
-
 	if err := r.Run(": " + port); err != nil {
 		log.Fatalf("\n \nError while running the server -> %v", err)
 	}
-
 }
