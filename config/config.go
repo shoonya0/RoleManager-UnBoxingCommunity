@@ -1,6 +1,8 @@
 package config
 
 import (
+	"log"
+
 	"github.com/spf13/viper"
 )
 
@@ -30,11 +32,13 @@ func LoadConfig(path, configName string) error {
 
 	err := viper.ReadInConfig()
 	if err != nil {
+		log.Fatal("Can't find the file .env : ", err)
 		return err
 	}
 
 	err = viper.Unmarshal(&GlobalConfig)
 	if err != nil {
+		log.Fatal("Environment can't be loaded: ", err)
 		return err
 	}
 

@@ -37,10 +37,16 @@ func init() {
 	}
 
 	if env.MODE == "production" {
+		log.Println("Logger disabled")
+		gin.SetMode(gin.ReleaseMode)
 		mode = "config.prod"
 	} else if env.MODE == "testing" {
+		log.Println("Logger enabled")
+		gin.SetMode(gin.DebugMode)
 		mode = "config.test"
 	} else {
+		log.Println("Logger enabled")
+		gin.SetMode(gin.DebugMode)
 		mode = "config.dev"
 	}
 
@@ -55,6 +61,8 @@ func main() {
 
 	// Middleware for connecting to the database
 	r.Use(db.DBMiddleware())
+
+	// Routes
 
 	port = env.PORT
 	if port == "" {
