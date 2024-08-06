@@ -3,6 +3,7 @@ package main
 import (
 	db "RoleManager/DB"
 	"RoleManager/config"
+	"RoleManager/routes"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -60,9 +61,10 @@ func main() {
 	r := gin.Default()
 
 	// Middleware for connecting to the database
-	r.Use(db.DBMiddleware())
+	db.DBConnect()
 
 	// Routes
+	routes.Router(r)
 
 	port = env.PORT
 	if port == "" {

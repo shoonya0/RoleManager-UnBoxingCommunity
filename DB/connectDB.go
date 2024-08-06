@@ -2,16 +2,18 @@ package db
 
 import (
 	"RoleManager/config"
+	"RoleManager/models"
 	"fmt"
 	"log"
 
-	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq" // Import the PostgreSQL driver
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func dBConnect() (*gorm.DB, error) {
+// make an globle variable for the database connection
+var Database *gorm.DB = nil
+
+func DBConnect() {
 	dns := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.GlobalConfig.DBHost,
 		config.GlobalConfig.DBPort,
@@ -19,19 +21,23 @@ func dBConnect() (*gorm.DB, error) {
 		config.GlobalConfig.DBPass,
 		config.GlobalConfig.DBName)
 
-	db, err := gorm.Open(postgres.Open(dns), &gorm.Config{})
+	var err error
+	Database, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
 	if err != nil {
-		return nil, err
+		log.Fatalf("Failed to connect to database: %v", err)
+		return
 	}
 
-	sqlDB, err := db.DB()
+	sqlDB, err := Database.DB()
 	if err != nil {
-		return nil, err
+		log.Fatalf("Failed to connect to database: %v", err)
+		return
 	}
 
 	// ping to the DB for checking the connection
 	if err := sqlDB.Ping(); err != nil {
-		return nil, err
+		log.Fatalf("Failed to connect to database: %v", err)
+		return
 	}
 
 	// Configure connection pooling
@@ -40,26 +46,11 @@ func dBConnect() (*gorm.DB, error) {
 	// No connection lifetime limit
 	sqlDB.SetConnMaxLifetime(0)
 
-	fmt.Println("Successfully connected to the database")
-
-	return db, nil
-}
-
-func DBMiddleware() gin.HandlerFunc {
-	db, err := dBConnect()
+	err = Database.AutoMigrate(&models.Customer{}, &models.Billing{}, &models.Payroll{}, &models.User{})
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		log.Fatalf("Failed to migrate database: %v", err)
+		return
 	}
-	return func(ctx *gin.Context) {
-		ctx.Set("db", db)
-		ctx.Next()
-	}
+
+	fmt.Println("Successfully connected to the database ")
 }
-
-// insertStmt := `insert into "Employee" ("Name", "EmpId") values('abcd', '41')`
-// _, e := db.Exec(insertStmt)
-// checkError(e)
-
-// insertDynStmt := `insert into "Employee" ("Name", "EmpId") values($1, $2)`
-// _, e = db.Exec(insertDynStmt, "efgh", "42")
-// checkError(e)
