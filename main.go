@@ -63,6 +63,8 @@ func main() {
 	// Middleware for connecting to the database
 	db.DBConnect()
 
+	// middleware for security headers
+
 	// Routes
 	routes.Router(r)
 
