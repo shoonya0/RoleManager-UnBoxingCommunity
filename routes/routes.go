@@ -15,7 +15,7 @@ func Router(r *gin.Engine) {
 		// to get a single customer by id / email
 		sales.GET("/customer/:id", controllers.GetCustomer)
 		// to get all customers
-		sales.GET("/customer", controllers.GetCustomer)
+		sales.GET("/customers", controllers.GetCustomer)
 
 		// to create a customer
 		sales.POST("/customer", controllers.CreateCustomer)
@@ -26,7 +26,7 @@ func Router(r *gin.Engine) {
 		// to get a billing
 		sales.GET("/billing/:id", controllers.GetBilling)
 		// to get all billings
-		sales.GET("/billing", controllers.GetBilling)
+		sales.GET("/billings", controllers.GetBilling)
 
 		// to create a billing
 		sales.POST("/billing", controllers.CreateBilling)
@@ -40,12 +40,12 @@ func Router(r *gin.Engine) {
 		// to get a single billing
 		accountant.GET("/billing/:id", controllers.GetBilling)
 		// to get all billings
-		accountant.GET("/billing", controllers.GetBilling)
+		accountant.GET("/billings", controllers.GetBilling)
 
 		// to get a single payroll
 		accountant.GET("/payroll/:id", controllers.GetPayroll)
 		// 	// to get all payrolls
-		accountant.GET("/payroll", controllers.GetPayroll)
+		accountant.GET("/payrolls", controllers.GetPayroll)
 	}
 
 	hr := r.Group("hr")
@@ -53,7 +53,7 @@ func Router(r *gin.Engine) {
 		// to get a single payroll
 		hr.GET("/payroll/:id", controllers.GetPayroll)
 		// to get all payrolls
-		hr.GET("/payroll", controllers.GetPayroll)
+		hr.GET("/payrolls", controllers.GetPayroll)
 
 		// to create a payroll
 		hr.POST("/payroll", controllers.CreatePayroll)
@@ -67,7 +67,7 @@ func Router(r *gin.Engine) {
 		// to get a user by id || email
 		admin.GET("/user/:id", controllers.GetUser)
 		// to get all users
-		admin.GET("/user", controllers.GetUser)
+		admin.GET("/users", controllers.GetUser)
 
 		// to create a user
 		admin.POST("/user", controllers.CreateUser)

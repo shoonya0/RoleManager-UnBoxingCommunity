@@ -49,6 +49,13 @@ func GetPayroll(ctx *gin.Context) {
 			gin.H{"error": "Error retrieving payrolls"})
 		return
 	}
+
+	if len(payrolls) == 0 {
+		ctx.JSON(http.StatusNotFound,
+			gin.H{"error": "No customer record found!"})
+		return
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{"payrolls": payrolls})
 }
 
@@ -58,7 +65,7 @@ func CreatePayroll(ctx *gin.Context) {
 	// Bind the JSON to payroll
 	if err := ctx.ShouldBindJSON(&payroll); err != nil {
 		ctx.JSON(http.StatusBadRequest,
-			gin.H{"error": err.Error()})
+			gin.H{"error": "provide Json data"})
 		return
 	}
 
@@ -72,7 +79,7 @@ func CreatePayroll(ctx *gin.Context) {
 	// create payroll in the database
 	if err := db.Database.Create(&payroll).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError,
-			gin.H{"error": "Error creating payroll"})
+			gin.H{"error": err.Error()})
 		return
 	}
 

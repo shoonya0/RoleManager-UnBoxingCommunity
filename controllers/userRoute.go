@@ -49,6 +49,13 @@ func GetUser(ctx *gin.Context) {
 			gin.H{"error": "Error retrieving users"})
 		return
 	}
+
+	if len(users) == 0 {
+		ctx.JSON(http.StatusNotFound,
+			gin.H{"error": "No user record found!"})
+		return
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{"users": users})
 }
 
@@ -57,7 +64,7 @@ func CreateUser(ctx *gin.Context) {
 
 	// Bind JSON to user model
 	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "please provide JSON data"})
 		return
 	}
 
@@ -69,7 +76,7 @@ func CreateUser(ctx *gin.Context) {
 
 	// creating the user
 	if err := db.Database.Create(&user).Error; err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error creating user"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -82,7 +89,7 @@ func UpdateUser(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&user); err != nil {
 		ctx.JSON(http.StatusBadRequest,
-			gin.H{"error": err.Error()})
+			gin.H{"error": "please provide valid JSON data"})
 		return
 	}
 
@@ -110,6 +117,9 @@ func UpdateUser(ctx *gin.Context) {
 	}
 	if user.Role != "" {
 		existingUser.Role = user.Role
+	}
+	if user.Password != "" {
+		existingUser.Password = user.Password
 	}
 
 	if err := db.Database.Save(&existingUser).Error; err != nil {

@@ -50,6 +50,13 @@ func GetCustomer(ctx *gin.Context) {
 			gin.H{"error": "Error retrieving customers"})
 		return
 	}
+
+	if len(customers) == 0 {
+		ctx.JSON(http.StatusNotFound,
+			gin.H{"error": "No customer record found!"})
+		return
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{"customers": customers})
 }
 
@@ -58,7 +65,7 @@ func CreateCustomer(ctx *gin.Context) {
 
 	// Bind JSON data to the customer model
 	if err := ctx.ShouldBindJSON(&customer); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "provide Json data"})
 		return
 	}
 
@@ -72,7 +79,7 @@ func CreateCustomer(ctx *gin.Context) {
 	// Create a Customer in the database
 	if err := db.Database.Create(&customer).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError,
-			gin.H{"error": "Error in creating new customer"})
+			gin.H{"error": err.Error()})
 		return
 	}
 
@@ -131,7 +138,7 @@ func UpdateCustomer(ctx *gin.Context) {
 	// save the update
 	if err := db.Database.Save(&existingCustomer).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError,
-			gin.H{"error": "Error in updating customer"})
+			gin.H{"error": err.Error()})
 		return
 	}
 
