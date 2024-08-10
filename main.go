@@ -3,6 +3,7 @@ package main
 import (
 	db "RoleManager/DB"
 	"RoleManager/config"
+	"RoleManager/controllers"
 	"RoleManager/routes"
 	"log"
 
@@ -63,10 +64,10 @@ func main() {
 	// Middleware for connecting to the database
 	db.DBConnect()
 
-	// middleware for security headers
-
 	// Routes
 	routes.Router(r)
+	r.POST("/login", controllers.LoginHandler)
+	// r.POST("/createUser", controllers.CreateUserHandler)
 
 	port = env.PORT
 	if port == "" {

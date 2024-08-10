@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -9,15 +10,17 @@ import (
 // User represents a user in the system
 type User struct {
 	gorm.Model
-	Name     string `json:"name" gorm:"not null"`
+	UserName string `json:"username,omitempty"`
 	Email    string `json:"email" gorm:"unique;not null"`
-	Password string `json:"-" gorm:"not null"`
+	Password string `json:"password,omitempty"`
 	Role     string `json:"role" gorm:"not null"`
 }
 
 // beforeCreate hook to validate fields before creating the record
 func (u *User) BeforeCreate(tx *gorm.DB) (err error) {
-	if u.Name == "" {
+	fmt.Println("BeforeCreate hook triggered")
+
+	if u.UserName == "" {
 		return errors.New("name is required")
 	}
 	if u.Email == "" {

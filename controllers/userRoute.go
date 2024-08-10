@@ -63,8 +63,18 @@ func CreateUser(ctx *gin.Context) {
 	var user models.User
 
 	// Bind JSON to user model
-	if err := ctx.ShouldBindJSON(&user); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "please provide JSON data"})
+	if err := ctx.BindJSON(&user); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		return
+	}
+
+	if user.Role == "admin" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		return
+	}
+
+	if user.Role != "hr" && user.Role != "accountant" && user.Role != "sales" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid role provided"})
 		return
 	}
 
@@ -75,12 +85,20 @@ func CreateUser(ctx *gin.Context) {
 	}
 
 	// creating the user
-	if err := db.Database.Create(&user).Error; err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if err := db.Database.Where("user_name = ?", user.UserName).First(&user).Error; err != nil {
+		if err.Error() == "record not found" {
+			if err := db.Database.Create(&user).Error; err != nil {
+				ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+				return
+			}
+			ctx.JSON(http.StatusCreated, gin.H{"user": "User created successfully"})
+			return
+		}
+		return
+	} else {
+		ctx.JSON(http.StatusConflict, gin.H{"error": "User already exists"})
 		return
 	}
-
-	ctx.JSON(http.StatusCreated, gin.H{"user": user})
 }
 
 func UpdateUser(ctx *gin.Context) {
@@ -112,8 +130,8 @@ func UpdateUser(ctx *gin.Context) {
 	if user.Email != "" {
 		existingUser.Email = user.Email
 	}
-	if user.Name != "" {
-		existingUser.Name = user.Name
+	if user.UserName != "" {
+		existingUser.UserName = user.UserName
 	}
 	if user.Role != "" {
 		existingUser.Role = user.Role

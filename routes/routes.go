@@ -8,9 +8,12 @@ import (
 )
 
 func Router(r *gin.Engine) {
-	r.Use(middlewares.AuthMiddleware())
+	r.Use(middlewares.AuthMiddleware)
+
 	// Sales routes
 	sales := r.Group("/sales")
+	// role based accesses
+	sales.Use(middlewares.RoleBasedAuth("sales"))
 	{
 		// to get a single customer by id / email
 		sales.GET("/customer/:id", controllers.GetCustomer)
@@ -36,6 +39,7 @@ func Router(r *gin.Engine) {
 	}
 
 	accountant := r.Group("/accountant")
+	accountant.Use(middlewares.RoleBasedAuth("accountant"))
 	{
 		// to get a single billing
 		accountant.GET("/billing/:id", controllers.GetBilling)
@@ -49,6 +53,7 @@ func Router(r *gin.Engine) {
 	}
 
 	hr := r.Group("hr")
+	hr.Use(middlewares.RoleBasedAuth("hr"))
 	{
 		// to get a single payroll
 		hr.GET("/payroll/:id", controllers.GetPayroll)
@@ -63,6 +68,7 @@ func Router(r *gin.Engine) {
 	}
 
 	admin := r.Group("/admin")
+	admin.Use(middlewares.RoleBasedAuth("admin"))
 	{
 		// to get a user by id || email
 		admin.GET("/user/:id", controllers.GetUser)
@@ -70,7 +76,7 @@ func Router(r *gin.Engine) {
 		admin.GET("/users", controllers.GetUser)
 
 		// to create a user
-		admin.POST("/user", controllers.CreateUser)
+		admin.POST("/createUser", controllers.CreateUser)
 
 		// to update a user
 		admin.PUT("/user/:id", controllers.UpdateUser)

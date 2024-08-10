@@ -8,6 +8,7 @@ import (
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 // make an globle variable for the database connection
@@ -22,7 +23,13 @@ func DBConnect() {
 		config.GlobalConfig.DBName)
 
 	var err error
-	Database, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
+
+	// Enable the logger
+	// Database, err = gorm.Open(postgres.Open(dns), &gorm.Config{})
+
+	// Disable the logger
+	Database, err = gorm.Open(postgres.Open(dns), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
+
 	if err != nil {
 		log.Fatalf("Failed to connect to database: %v", err)
 		return

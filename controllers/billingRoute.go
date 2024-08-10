@@ -3,98 +3,39 @@ package controllers
 import (
 	db "RoleManager/DB"
 	"RoleManager/models"
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
-
-// func GetBilling(ctx *gin.Context) {
-// 	var billing models.Billing
-// 	var billings []models.Billing
-// 	id := ctx.Param("id")
-
-// 	// checking Database connection
-// 	if db.Database == nil {
-// 		ctx.JSON(500, gin.H{"error": "Database connection not found"})
-// 		return
-// 	}
-
-// 	// checking if the id is provided to querry the database
-// 	if id != "" {
-// 		if err := db.Database.Where("id = ?", id).First(&billing).Error; err != nil {
-// 			ctx.JSON(http.StatusNotFound, gin.H{"error": "Billing record not found!"})
-// 			return
-// 		}
-// 		ctx.JSON(http.StatusOK, gin.H{"billing": billing})
-// 		return
-// 	}
-
-// 	// request to get a billing by customerID from JSON body
-// 	var requestBody map[string]interface{}
-// 	if err := ctx.ShouldBindJSON(&requestBody); err == nil {
-// 		if customerID, ok := requestBody["customer_id"].(float64); ok {
-// 			customerIDUint := uint(customerID)
-// 			if err := db.Database.Where("customer_id = ?", customerIDUint).First(&billing).Error; err != nil {
-// 				ctx.JSON(http.StatusNotFound, gin.H{"error": "billing record not found"})
-// 				return
-// 			}
-// 			ctx.JSON(http.StatusOK, gin.H{"billing": billing})
-// 			return
-// 		}
-// 	}
-
-// 	if err := db.Database.Find(&billings).Error; err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error retrieving billings"})
-// 		return
-// 	}
-
-// 	if len(billings) == 0 {
-// 		ctx.JSON(http.StatusNotFound,
-// 			gin.H{"error": "No customer record found!"})
-// 		return
-// 	}
-
-// 	ctx.JSON(http.StatusOK, gin.H{"billings": billings})
-// }
 
 func GetBilling(ctx *gin.Context) {
 	var billing models.Billing
 	var billings []models.Billing
 	id := ctx.Param("id")
 
-	// Check Database connection
+	// checking Database connection
 	if db.Database == nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not found"})
+		ctx.JSON(500, gin.H{"error": "Database connection not found"})
 		return
 	}
 
-	// Query by ID
+	// checking if the id is provided to querry the database
 	if id != "" {
-		result := db.Database.Where("id = ?", id).First(&billing)
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": "Billing record not found"})
-			return
-		} else if result.Error != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+		if err := db.Database.Where("id = ?", id).First(&billing).Error; err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "Billing record not found!"})
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{"billing": billing})
 		return
 	}
 
-	// Query by customerID from JSON body
+	// request to get a billing by customerID from JSON body
 	var requestBody map[string]interface{}
 	if err := ctx.ShouldBindJSON(&requestBody); err == nil {
 		if customerID, ok := requestBody["customer_id"].(float64); ok {
 			customerIDUint := uint(customerID)
-			result := db.Database.Where("customer_id = ?", customerIDUint).First(&billing)
-			if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-				ctx.JSON(http.StatusNotFound, gin.H{"error": "Billing record not found"})
-				return
-			} else if result.Error != nil {
-				ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+			if err := db.Database.Where("customer_id = ?", customerIDUint).First(&billing).Error; err != nil {
+				ctx.JSON(http.StatusNotFound, gin.H{"error": "billing record not found"})
 				return
 			}
 			ctx.JSON(http.StatusOK, gin.H{"billing": billing})
@@ -102,19 +43,76 @@ func GetBilling(ctx *gin.Context) {
 		}
 	}
 
-	// Retrieve all billings if no specific query
 	if err := db.Database.Find(&billings).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error retrieving billings"})
 		return
 	}
 
 	if len(billings) == 0 {
-		ctx.JSON(http.StatusNotFound, gin.H{"error": "No customer record found"})
+		ctx.JSON(http.StatusNotFound,
+			gin.H{"error": "No customer record found!"})
 		return
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"billings": billings})
 }
+
+// func GetBilling(ctx *gin.Context) {
+// 	var billing models.Billing
+// 	var billings []models.Billing
+// 	id := ctx.Param("id")
+
+// 	// Check Database connection
+// 	if db.Database == nil {
+// 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not found"})
+// 		return
+// 	}
+
+// 	// Query by ID
+// 	if id != "" {
+// 		result := db.Database.Where("id = ?", id).First(&billing)
+// 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+// 			ctx.JSON(http.StatusNotFound, gin.H{"error": "Billing record not found"})
+// 			return
+// 		} else if result.Error != nil {
+// 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+// 			return
+// 		}
+// 		ctx.JSON(http.StatusOK, gin.H{"billing": billing})
+// 		return
+// 	}
+
+// 	// Query by customerID from JSON body
+// 	var requestBody map[string]interface{}
+// 	if err := ctx.ShouldBindJSON(&requestBody); err == nil {
+// 		if customerID, ok := requestBody["customer_id"].(float64); ok {
+// 			customerIDUint := uint(customerID)
+// 			result := db.Database.Where("customer_id = ?", customerIDUint).First(&billing)
+// 			if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+// 				ctx.JSON(http.StatusNotFound, gin.H{"error": "Billing record not found"})
+// 				return
+// 			} else if result.Error != nil {
+// 				ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database error"})
+// 				return
+// 			}
+// 			ctx.JSON(http.StatusOK, gin.H{"billing": billing})
+// 			return
+// 		}
+// 	}
+
+// 	// Retrieve all billings if no specific query
+// 	if err := db.Database.Find(&billings).Error; err != nil {
+// 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error retrieving billings"})
+// 		return
+// 	}
+
+// 	if len(billings) == 0 {
+// 		ctx.JSON(http.StatusNotFound, gin.H{"error": "No customer record found"})
+// 		return
+// 	}
+
+// 	ctx.JSON(http.StatusOK, gin.H{"billings": billings})
+// }
 
 func CreateBilling(ctx *gin.Context) {
 	var billing models.Billing
