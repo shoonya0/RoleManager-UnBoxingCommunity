@@ -20,7 +20,7 @@ func LoginHandler(ctx *gin.Context) {
 		return
 	}
 
-	if err := db.Database.Where("user_name = ? AND password = ?", user.UserName, user.Password).First(&user).Error; err != nil {
+	if err := db.Database.Where("email = ? AND password = ?", user.Email, user.Password).First(&user).Error; err != nil {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	} else {

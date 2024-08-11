@@ -15,9 +15,9 @@ func Router(r *gin.Engine) {
 	// role based accesses
 	sales.Use(middlewares.RoleBasedAuth("sales"))
 	{
-		// to get a single customer by id / email
+		// to get a single customer by id
 		sales.GET("/customer/:id", controllers.GetCustomer)
-		// to get all customers
+		// to get all customers or a single customer by email which is provided in JSON body
 		sales.GET("/customers", controllers.GetCustomer)
 
 		// to create a customer
@@ -28,7 +28,7 @@ func Router(r *gin.Engine) {
 
 		// to get a billing
 		sales.GET("/billing/:id", controllers.GetBilling)
-		// to get all billings
+		// to get all billings or a single billing by customer_id which is provided in JSON body
 		sales.GET("/billings", controllers.GetBilling)
 
 		// to create a billing
@@ -43,7 +43,7 @@ func Router(r *gin.Engine) {
 	{
 		// to get a single billing
 		accountant.GET("/billing/:id", controllers.GetBilling)
-		// to get all billings
+		// to get all billings or a single billing by customer_id which is provided in JSON body
 		accountant.GET("/billings", controllers.GetBilling)
 
 		// to get a single payroll
@@ -57,7 +57,7 @@ func Router(r *gin.Engine) {
 	{
 		// to get a single payroll
 		hr.GET("/payroll/:id", controllers.GetPayroll)
-		// to get all payrolls
+		// to get all payrolls or a single payroll by employee_name which is provided in JSON body
 		hr.GET("/payrolls", controllers.GetPayroll)
 
 		// to create a payroll

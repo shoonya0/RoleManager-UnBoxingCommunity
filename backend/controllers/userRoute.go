@@ -27,6 +27,8 @@ func GetUser(ctx *gin.Context) {
 				gin.H{"error": "user record not found"})
 			return
 		}
+		ctx.JSON(http.StatusOK, gin.H{"user": user})
+		return
 	}
 
 	// request to get a user by email from JSON body

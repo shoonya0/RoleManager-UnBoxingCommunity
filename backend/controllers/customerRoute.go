@@ -3,6 +3,7 @@ package controllers
 import (
 	db "RoleManager/DB"
 	"RoleManager/models"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -83,6 +84,7 @@ func CreateCustomer(ctx *gin.Context) {
 		return
 	}
 
+	fmt.Println(customer)
 	ctx.JSON(http.StatusCreated, gin.H{"customer": customer})
 }
 

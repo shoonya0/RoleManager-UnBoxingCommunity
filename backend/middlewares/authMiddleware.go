@@ -25,6 +25,7 @@ func AuthMiddleware(ctx *gin.Context) {
 
 	// jwt token fetching
 	authHeader := ctx.Request.Header.Get("Authorization")
+
 	if authHeader == "" {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Missing Authorization header"})
 		ctx.Abort()
