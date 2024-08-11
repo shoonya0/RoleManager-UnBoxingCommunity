@@ -67,7 +67,6 @@ func main() {
 	// Routes
 	routes.Router(r)
 	r.POST("/login", controllers.LoginHandler)
-	// r.POST("/createUser", controllers.CreateUserHandler)
 
 	port = env.PORT
 	if port == "" {

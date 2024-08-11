@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Role-Based Access Control</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Role-Based Access Control</h1>
+
+      <!-- Authentication Section -->
+      <div id="authentication">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button onclick="login()">Login</button>
+      </div>
+
+      <!-- Authorization Section -->
+      <div id="authorization" style="display: none">
+        <h2>Welcome, <span id="name"></span><span id="user-role"></span></h2>
+
+        <!-- Management Sections -->
+        <div class="management" id="customer-management" style="display: none">
+          <h3>Customer Management</h3>
+          <button onclick="performAction('customer', 'read')">
+            View Customers
+          </button>
+          <button onclick="performAction('customer', 'write')">
+            Add/Edit Customers
+          </button>
+        </div>
+
+        <div class="management" id="billing-management" style="display: none">
+          <h3>Billing Management</h3>
+          <button onclick="performAction('billing', 'read')">
+            View Billing
+          </button>
+        </div>
+
+        <div class="management" id="payroll-management" style="display: none">
+          <h3>Payroll Management</h3>
+          <button onclick="performAction('payroll', 'read')">
+            View Payroll
+          </button>
+        </div>
+
+        <div class="management" id="user-management" style="display: none">
+          <h3>User Management</h3>
+          <button onclick="performAction('admin', 'read')">View Users</button>
+          <button onclick="performAction('admin', 'write')">
+            Add/Edit Users
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>

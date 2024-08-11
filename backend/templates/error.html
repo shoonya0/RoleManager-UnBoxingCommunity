@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Error</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Error</h1>
+      <p id="error-message">
+        An unexpected error has occurred. Please try again later.
+      </p>
+      <button onclick="goBack()">Go Back</button>
+    </div>
+
+    <script>
+      function goBack() {
+        window.history.back();
+      }
+
+      // You can also dynamically set the error message from the backend using query parameters or another method
+      const params = new URLSearchParams(window.location.search);
+      const message = params.get("message");
+      if (message) {
+        document.getElementById("error-message").innerText = message;
+      }
+    </script>
+  </body>
+</html>
