@@ -30,20 +30,6 @@ func GetPayroll(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{"payroll": payroll})
 	}
 
-	// request to get a payroll by employeeName from JSON body
-	var requestBody map[string]interface{}
-	if err := ctx.ShouldBindJSON(&requestBody); err == nil {
-		if employeeName, ok := requestBody["employee_name"].(string); ok && employeeName != "" {
-			if err := db.Database.Where("employee_name = ?", employeeName).First(&payroll).Error; err != nil {
-				ctx.JSON(http.StatusNotFound,
-					gin.H{"error": "Payroll record not found"})
-				return
-			}
-			ctx.JSON(http.StatusOK, gin.H{"payroll": payroll})
-			return
-		}
-	}
-
 	if err := db.Database.Find(&payrolls).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError,
 			gin.H{"error": "Error retrieving payrolls"})

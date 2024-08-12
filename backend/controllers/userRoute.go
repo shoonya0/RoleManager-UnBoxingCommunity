@@ -12,6 +12,7 @@ func GetUser(ctx *gin.Context) {
 	var user models.User
 	var users []models.User
 	var id = ctx.Param("id")
+	var email = ctx.Param("email")
 
 	// check the database conn.
 	if db.Database == nil {
@@ -31,18 +32,14 @@ func GetUser(ctx *gin.Context) {
 		return
 	}
 
-	// request to get a user by email from JSON body
-	var requestBody map[string]interface{}
-	if err := ctx.ShouldBindJSON(&requestBody); err == nil {
-		if email, ok := requestBody["email"].(string); ok && email != "" {
-			if err := db.Database.Where("email = ?", email).First(&user).Error; err != nil {
-				ctx.JSON(http.StatusNotFound,
-					gin.H{"error": "user record not found"})
-				return
-			}
-			ctx.JSON(http.StatusOK, gin.H{"user": user})
+	if email != "" {
+		if err := db.Database.Where("email = ?", email).First(&user).Error; err != nil {
+			ctx.JSON(http.StatusNotFound,
+				gin.H{"error": "user record not found"})
 			return
 		}
+		ctx.JSON(http.StatusOK, gin.H{"user": user})
+		return
 	}
 
 	// if id || email is not provided

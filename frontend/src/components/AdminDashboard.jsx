@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import UserList from '../helper/UserList';
-import CreateUser from '../helper/CreateUser';
-import UpdateUser from '../helper/UpdateUser';
+import UserList from '../helper/admin/UserList';
+import CreateUser from '../helper/admin/CreateUser';
+import UpdateUser from '../helper/admin/UpdateUser';
 
 const AdminDashboard = () => {
     const [activeComponent, setActiveComponent] = useState('UserList');

@@ -1,0 +1,41 @@
+.customer-list-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+    text-align: center;
+    color: #333;
+}
+
+.search-fields {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.search-fields input {
+    width: 48%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.customer-list {
+    list-style: none;
+    padding: 0;
+}
+
+.customer-list li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.customer-list li:last-child {
+    border-bottom: none;
+}

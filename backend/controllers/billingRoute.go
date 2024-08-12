@@ -12,6 +12,7 @@ func GetBilling(ctx *gin.Context) {
 	var billing models.Billing
 	var billings []models.Billing
 	id := ctx.Param("id")
+	customerID := ctx.Param("customer_id")
 
 	// checking Database connection
 	if db.Database == nil {
@@ -29,20 +30,17 @@ func GetBilling(ctx *gin.Context) {
 		return
 	}
 
-	// request to get a billing by customerID from JSON body
-	var requestBody map[string]interface{}
-	if err := ctx.ShouldBindJSON(&requestBody); err == nil {
-		if customerID, ok := requestBody["customer_id"].(float64); ok {
-			customerIDUint := uint(customerID)
-			if err := db.Database.Where("customer_id = ?", customerIDUint).First(&billing).Error; err != nil {
-				ctx.JSON(http.StatusNotFound, gin.H{"error": "billing record not found"})
-				return
-			}
-			ctx.JSON(http.StatusOK, gin.H{"billing": billing})
+	// request to get a billing by customerID
+	if customerID != "" {
+		if err := db.Database.Where("customer_id = ?", customerID).Find(&billings).Error; err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "billing record not found"})
 			return
 		}
+		ctx.JSON(http.StatusOK, gin.H{"billings": billings})
+		return
 	}
 
+	// to get all billings
 	if err := db.Database.Find(&billings).Error; err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error retrieving billings"})
 		return

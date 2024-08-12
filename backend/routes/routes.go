@@ -17,7 +17,9 @@ func Router(r *gin.Engine) {
 	{
 		// to get a single customer by id
 		sales.GET("/customer/:id", controllers.GetCustomer)
-		// to get all customers or a single customer by email which is provided in JSON body
+		// to get a single customer by email
+		sales.GET("/customers/:email", controllers.GetCustomer)
+		// to get all customers or a single customer by email
 		sales.GET("/customers", controllers.GetCustomer)
 
 		// to create a customer
@@ -28,7 +30,9 @@ func Router(r *gin.Engine) {
 
 		// to get a billing
 		sales.GET("/billing/:id", controllers.GetBilling)
-		// to get all billings or a single billing by customer_id which is provided in JSON body
+		// to get a single billing by customer_id
+		sales.GET("/billings/:customer_id", controllers.GetBilling)
+		// to get all billings
 		sales.GET("/billings", controllers.GetBilling)
 
 		// to create a billing
@@ -41,9 +45,11 @@ func Router(r *gin.Engine) {
 	accountant := r.Group("/accountant")
 	accountant.Use(middlewares.RoleBasedAuth("accountant"))
 	{
-		// to get a single billing
+		// to get a billing
 		accountant.GET("/billing/:id", controllers.GetBilling)
-		// to get all billings or a single billing by customer_id which is provided in JSON body
+		// to get a single billing by customer_id
+		accountant.GET("/billings/:customer_id", controllers.GetBilling)
+		// to get all billings
 		accountant.GET("/billings", controllers.GetBilling)
 
 		// to get a single payroll
@@ -57,7 +63,7 @@ func Router(r *gin.Engine) {
 	{
 		// to get a single payroll
 		hr.GET("/payroll/:id", controllers.GetPayroll)
-		// to get all payrolls or a single payroll by employee_name which is provided in JSON body
+		// to get all payrolls
 		hr.GET("/payrolls", controllers.GetPayroll)
 
 		// to create a payroll
@@ -70,8 +76,10 @@ func Router(r *gin.Engine) {
 	admin := r.Group("/admin")
 	admin.Use(middlewares.RoleBasedAuth("admin"))
 	{
-		// to get a user by id || email
+		// to get a user by id
 		admin.GET("/user/:id", controllers.GetUser)
+		// to get a user by email
+		admin.GET("/users/:email", controllers.GetUser)
 		// to get all users
 		admin.GET("/users", controllers.GetUser)
 

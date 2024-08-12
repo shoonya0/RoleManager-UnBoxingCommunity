@@ -13,48 +13,45 @@ func GetCustomer(ctx *gin.Context) {
 	var customer models.Customer
 	var customers []models.Customer
 	id := ctx.Param("id")
+	email := ctx.Param("email")
 
-	// check if the database connection is available
+	fmt.Println(id)
+	fmt.Println(email)
+
+	// Check if the database connection is available
 	if db.Database == nil {
-		ctx.JSON(http.StatusInternalServerError,
-			gin.H{"error": "Database connection not found"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not found"})
 		return
 	}
 
-	// checking if the id is provided to querry the database
+	// Get customer by ID if provided
 	if id != "" {
 		if err := db.Database.Where("id = ?", id).Preload("Billings").First(&customer).Error; err != nil {
-			ctx.JSON(http.StatusNotFound,
-				gin.H{"error": "Customer record not found!"})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "Customer record not found!"})
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{"user": customer})
 		return
 	}
 
-	// request to get a customer by email from JSON body
-	var requestBody map[string]interface{}
-	if err := ctx.ShouldBindJSON(&requestBody); err == nil {
-		if email, ok := requestBody["email"].(string); ok && email != "" {
-			if err := db.Database.Where("email = ?", email).Preload("Billings").First(&customer).Error; err != nil {
-				ctx.JSON(http.StatusNotFound,
-					gin.H{"error": "user record not found"})
-				return
-			}
-			ctx.JSON(http.StatusOK, gin.H{"user": customer})
+	// Get customer by email if provided
+	if email != "" {
+		if err := db.Database.Where("email = ?", email).Preload("Billings").First(&customer).Error; err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "Customer record not found!"})
 			return
 		}
+		ctx.JSON(http.StatusOK, gin.H{"user": customer})
+		return
 	}
 
+	// Get all customers
 	if err := db.Database.Preload("Billings").Find(&customers).Error; err != nil {
-		ctx.JSON(http.StatusInternalServerError,
-			gin.H{"error": "Error retrieving customers"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error retrieving customers"})
 		return
 	}
 
 	if len(customers) == 0 {
-		ctx.JSON(http.StatusNotFound,
-			gin.H{"error": "No customer record found!"})
+		ctx.JSON(http.StatusNotFound, gin.H{"error": "No customer records found!"})
 		return
 	}
 
