@@ -15,9 +15,6 @@ func GetCustomer(ctx *gin.Context) {
 	id := ctx.Param("id")
 	email := ctx.Param("email")
 
-	fmt.Println(id)
-	fmt.Println(email)
-
 	// Check if the database connection is available
 	if db.Database == nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not found"})

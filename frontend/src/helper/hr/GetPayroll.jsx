@@ -1,25 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../admin/universal.css';
 
 const GetPayroll = () => {
-    const [payroll, setPayroll] = useState(null);
+    const [payrolls, setPayrolls] = useState([]);
     const [payrollId, setPayrollId] = useState('');
     const token = localStorage.getItem('token');
 
-    const fetchPayroll = async () => {
+    const fetchPayrolls = async () => {
         try {
-            const response = await axios.get(`http://localhost:3231/hr/payroll/${payrollId}`, {
+            let url = 'http://localhost:3231/hr/payrolls';
+            if (payrollId) {
+                url = `http://localhost:3231/hr/payroll/${payrollId}`;
+            }
+
+            const response = await axios.get(url, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            setPayroll(response.data.payroll);
-            console.log(response.data.payroll);
+
+            if (payrollId) {
+                setPayrolls([response.data.payroll]);
+            } else {
+                setPayrolls(response.data.payrolls);
+            }
         } catch (error) {
             console.error('Error fetching payroll:', error);
         }
     };
+
+    useEffect(() => {
+        fetchPayrolls();
+    }, []);
 
     return (
         <div>
@@ -30,13 +43,29 @@ const GetPayroll = () => {
                 value={payrollId}
                 onChange={(e) => setPayrollId(e.target.value)}
             />
-            <button onClick={fetchPayroll}>Get Payroll</button>
-            {payroll && (
-                <div>
-                    <p>Employee Name: {payroll.employee_name}</p>
-                    <p>Salary: {payroll.salary}</p>
-                    <p>Status: {payroll.status}</p>
-                </div>
+            <button onClick={fetchPayrolls}>Search Payroll</button>
+
+            {payrolls.length > 0 && (
+                <table className="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Employee Name</th>
+                            <th>Salary</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {payrolls.map((payroll) => (
+                            <tr key={payroll.ID}>
+                                <td>{payroll.ID}</td>
+                                <td>{payroll.employee_name}</td>
+                                <td>{payroll.salary}</td>
+                                <td>{payroll.status}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     );

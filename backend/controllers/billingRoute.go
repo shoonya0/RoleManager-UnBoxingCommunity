@@ -16,7 +16,7 @@ func GetBilling(ctx *gin.Context) {
 
 	// checking Database connection
 	if db.Database == nil {
-		ctx.JSON(500, gin.H{"error": "Database connection not found"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection not found"})
 		return
 	}
 

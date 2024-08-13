@@ -54,7 +54,7 @@ func Router(r *gin.Engine) {
 
 		// to get a single payroll
 		accountant.GET("/payroll/:id", controllers.GetPayroll)
-		// 	// to get all payrolls
+		// to get all payrolls
 		accountant.GET("/payrolls", controllers.GetPayroll)
 	}
 

@@ -10,7 +10,7 @@ const CreateBilling = () => {
     const handleCreateBilling = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:3231/sales/billing', {
+            const response = await fetch('http://localhost:3231/hr/payroll', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

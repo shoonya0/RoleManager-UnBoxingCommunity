@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../admin/universal.css';
 
 const UpdatePayroll = () => {
-    const [payrollData, setPayrollData] = useState({ employee_name: '', salary: '', status: '' });
+    const [payrollData, setPayrollData] = useState({ employee_name: '', salary: NaN, status: '' });
     const [payrollId, setPayrollId] = useState('');
     const token = localStorage.getItem('token');
 

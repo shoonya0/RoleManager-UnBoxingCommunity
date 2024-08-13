@@ -3,6 +3,7 @@ package controllers
 import (
 	db "RoleManager/DB"
 	"RoleManager/models"
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -28,6 +29,7 @@ func GetPayroll(ctx *gin.Context) {
 			return
 		}
 		ctx.JSON(http.StatusOK, gin.H{"payroll": payroll})
+		return
 	}
 
 	if err := db.Database.Find(&payrolls).Error; err != nil {
@@ -52,6 +54,7 @@ func CreatePayroll(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(&payroll); err != nil {
 		ctx.JSON(http.StatusBadRequest,
 			gin.H{"error": "provide Json data"})
+		fmt.Println()
 		return
 	}
 
@@ -69,7 +72,7 @@ func CreatePayroll(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusInternalServerError,
+	ctx.JSON(http.StatusOK,
 		gin.H{"payroll": payroll})
 }
 
