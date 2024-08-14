@@ -238,7 +238,6 @@ PUT Route : Update an existing user
 
 1. Go to the frontend :
    - execute `npm install` to install all dependency.
-   - execute `npm run dev`
 2. `npm run dev` and play with the local dev environment.
 3. `npm run build`.
 4. `npm run ssr`. You can [disable javascript in your browser](https://developer.chrome.com/docs/devtools/javascript/disable/), to verify if it can still render.
