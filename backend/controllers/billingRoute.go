@@ -9,7 +9,7 @@ import (
 )
 
 func GetBilling(ctx *gin.Context) {
-	var billing models.Billing
+	// var billing models.Billing
 	var billings []models.Billing
 	id := ctx.Param("id")
 	customerID := ctx.Param("customer_id")
@@ -22,11 +22,11 @@ func GetBilling(ctx *gin.Context) {
 
 	// checking if the id is provided to querry the database
 	if id != "" {
-		if err := db.Database.Where("id = ?", id).First(&billing).Error; err != nil {
+		if err := db.Database.Where("id = ?", id).First(&billings).Error; err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": "Billing record not found!"})
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{"billing": billing})
+		ctx.JSON(http.StatusOK, gin.H{"billing": billings})
 		return
 	}
 

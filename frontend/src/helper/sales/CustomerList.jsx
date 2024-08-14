@@ -28,6 +28,7 @@ const CustomerList = () => {
                 setCustomers(response.data.customers || [response.data.user]);
             } catch (error) {
                 console.error('Error fetching customers:', error);
+                setCustomers([]);
             }
         };
 

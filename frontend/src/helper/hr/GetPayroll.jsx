@@ -27,12 +27,13 @@ const GetPayroll = () => {
             }
         } catch (error) {
             console.error('Error fetching payroll:', error);
+            setPayrolls([]);
         }
     };
 
     useEffect(() => {
         fetchPayrolls();
-    }, []);
+    }, [payrollId]); // Re-run fetchPayrolls when payrollId changes
 
     return (
         <div>
@@ -43,9 +44,8 @@ const GetPayroll = () => {
                 value={payrollId}
                 onChange={(e) => setPayrollId(e.target.value)}
             />
-            <button onClick={fetchPayrolls}>Search Payroll</button>
 
-            {payrolls.length > 0 && (
+            {payrolls.length > 0 ?
                 <table className="user-table">
                     <thead>
                         <tr>
@@ -66,7 +66,7 @@ const GetPayroll = () => {
                         ))}
                     </tbody>
                 </table>
-            )}
+                : <p>No payrolls found</p>}
         </div>
     );
 };

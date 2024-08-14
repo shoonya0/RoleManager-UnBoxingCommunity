@@ -24,10 +24,14 @@ const BillingList = () => {
                     },
                 });
 
-                console.log('Billings:', response.data.billings);
-                setBillings(response.data.billings || []);
+                if (searchBilling_id)
+                    setBillings(response.data.billing);
+                else
+                    setBillings(response.data.billings);
+
             } catch (error) {
                 console.error('Error fetching billings:', error);
+                setBillings([]);
             }
         };
 
@@ -59,26 +63,32 @@ const BillingList = () => {
                 />
             </div>
 
-            <table className="user-table">
-                <thead>
-                    <tr>
-                        <th>Billing ID</th>
-                        <th>Customer ID</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {billings.map((billing) => (
-                        <tr key={billing.ID}>
-                            <td>{billing.ID}</td>
-                            <td>{billing.customer_id}</td>
-                            <td>{billing.amount}</td>
-                            <td>{new Date(billing.date).toLocaleDateString()}</td>
+            {console.log(billings.length == 0)}
+            {console.log(billings.length)}
+            {billings.length > 0 ? (
+                <table className="user-table">
+                    <thead>
+                        <tr>
+                            <th>Billing ID</th>
+                            <th>Customer ID</th>
+                            <th>Amount</th>
+                            <th>Date</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {billings.map((billing) => (
+                            <tr key={billing.ID}>
+                                <td>{billing.ID}</td>
+                                <td>{billing.customer_id}</td>
+                                <td>{billing.amount}</td>
+                                <td>{new Date(billing.date).toLocaleDateString()}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <p>No billings found.</p>
+            )}
         </div>
     );
 };

@@ -19,8 +19,8 @@ const AccountantDashboard = () => {
     return (
         <div>
             <h2>Accountant Dashboard</h2>
-            <button onClick={() => setActiveComponent('GetBilling')}>Create Billing</button>
-            <button onClick={() => setActiveComponent('Getpayroll')}>View Billings</button>
+            <button onClick={() => setActiveComponent('GetBilling')}>View Billings</button>
+            <button onClick={() => setActiveComponent('Getpayroll')}>View Payroll</button>
             {renderComponent()}
         </div>
     );
